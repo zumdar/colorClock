@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>ESP32 Dali Clock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            width: max-content;
+        }
+
+        form div {
+            display: flex;
+            gap: 1em;
+            margin: 0.5em 0;
+        }
+
+        label {
+            flex-grow: 1
+        }
+
+        input:not([type="submit"]),
+        select {
+            min-width: 20em;
+            box-sizing: border-box;
+        }
+    </style>
+    <script>
+        // When the user selects a general location from the list,
+        // repopulate it with more specific locations from the server
+        async function onFilterChanged(el) {
+            if (!el.value) return;
+            tz = await fetch("timezones?prefix=" + el.value);
+            tz = await tz.json();
+            el.innerText = "";
+            tz.forEach(x => {
+                o = document.createElement("option");
+                o.innerText = x;
+                el.appendChild(o);
+            })
+            el.name = "timezone";
+            el.removeAttribute("onchange");
+        }
+    </script>
+</head>
+
+<body>
+    <h1>ESP32 COLOR CLOCK</h1>
+
+    <form action="/config_time" method="get">
+        <h2>Manual Time Selection</h2>
+        <div><label for="datetime-local">Time:</label>
+            <input type="datetime-local" id="datetime-local" name="datetime-local" step="1">
+        </div>
+        </div>
+        <div><label for="mil_time">Show 24-hour clock:</label>
+            <input type="checkbox" id="mil_time" name="mil_time" checked>
+        </div>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+    <form action="/config_wifi" method="get">
+        <h2>Network Configuration</h2>
+        <div><label for="net_ssid">Network Name:</label>
+            <input type="text" id="net_ssid" name="net_ssid">
+        </div>
+        <div><label for="net_pass">Network Password:</label>
+            <input type="text" id="net_pass" name="net_pass">
+        </div>
+        <br>
+        <div><label for="ntp_addr">Time Server:</label>
+            <input type="text" id="ntp_addr" name="ntp_addr" value="pool.ntp.org">
+        </div>
+        <div><label for="location">Location:</label>
+            <select id="location" onchange="onFilterChanged(this)">
+                <option value="">-- none selected --</option>
+                <option>Africa</option>
+                <option>America</option>
+                <option>Asia</option>
+                <option>Antartica</option>
+                <option>Arctic</option>
+                <option>Asia</option>
+                <option>Atlantic</option>
+                <option>Australia</option>
+                <option>Etc</option>
+                <option>Europe</option>
+                <option>Indian</option>
+                <option>Pacific</option>
+            </select>
+        </div>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+
+</html>
