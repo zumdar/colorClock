@@ -46,6 +46,7 @@ contact me!
 Patrick Morales with the color / time idea many years ago at House Electric in Athens, GA.
 
 ## TODO:
+ - [WIFI scan networks](https://docs.arduino.cc/retired/library-examples/wifi-library/ScanNetworks/) - make scan network and drop down menu a part of the captive portal - implement like its done in the [WLED portal](https://github.com/Aircoookie/WLED/blob/main/wled00/data/settings_wifi.htm)
  - make ESP an access point so you can enter wifi info that way instead of having to upload code again
   - if there is no wifi, set the time manually from your device via the access point. (can we grab the device's time and just use that?) 
   - Having to set the UTC_OFFSET and DST manually in code is a little annoying too. 
