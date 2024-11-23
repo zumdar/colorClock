@@ -41,6 +41,8 @@ contact me!
 
  updated October 2022 to run with ESP32
 
+ updated Novemeber 2024 to do automatic time zone detection
+
 ## Acknowledgments
 
 Patrick Morales with the color / time idea many years ago at House Electric in Athens, GA.
