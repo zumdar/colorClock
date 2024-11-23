@@ -1,16 +1,17 @@
 # Color Clock 
 Create a clock using color to convey time!
 
-![](documentation/color_clock_viz.png)
+![](documentation/color_clock_viz_resize.png)
 
 I made this clock with a salvaged elevator indicator from an abandoned building. It was a 12 story building with a mezzanine level (hence the M). 
 
 Using WS2812 addressable leds, the number of the hour lights up. The color of the hour inicates 'where we are' in the hour. 
 
 Also, to indicate PM, I have lit up the Mezzanine M. It changes slowly throughout the afternoon, also cycling through the color wheel. 
-Here is a ~12 hr time lapse of the clock working!
+Here is a ~12 hr time lapse of the clock working! 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Zt6K_mW_ylo?si=9E7i3HHWta6oSX1H" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+[![youtube link](documentation/thumbnail.png)](https://www.youtube.com/watch?v=Zt6K_mW_ylo)
 
 For example, ~1:40Pm will have the 1 lit up blueish, and the M lit up red/orange:
 
