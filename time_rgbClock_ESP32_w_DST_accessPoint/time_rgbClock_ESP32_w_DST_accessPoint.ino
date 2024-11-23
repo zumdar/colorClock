@@ -21,6 +21,9 @@
 #include <WiFi.h>
 #include <Time.h>
 #include <IotWebConf.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
+#include <time_zones.h>
 
 // -- Initial name of the Thing. Used e.g. as SSID of the own Access Point.
 const char thingName[] = "colorclock";
@@ -92,6 +95,12 @@ int hoursArray[12][2] = {{25, 24},
   {3, 2},
   {1, 0}
 };
+
+// location strings for time zone
+String latitude = "";
+String longitude = "";
+String timezone = "";
+String convertedTimeZone = "";
 
 //helper functions
 
@@ -174,8 +183,11 @@ void loop() {
   Serial.print("network state is: ");
   Serial.println(networkState);
   // once connected, connect to the NTP servers and set the time
+  if (networkState == 4 && latitude == "") {
+    getGeolocation();
+  }
   if (networkState == 4 && ntpConnected == false) {
-    initTime("EST+5EDT,M3.2.0/2,M11.1.0/2");   // Set for EST (eastern standard time)
+    initTime(convertedTimeZone);   // Set for EST (eastern standard time)
     printLocalTime();
   }
   if (ntpConnected) {
@@ -213,6 +225,7 @@ void loop() {
     Serial.println(minsecs);
     Serial.print("hue: ");
     Serial.println(hue);
+    Serial.println(WiFi.localIP());
 
     if (minsecs == 1) {
       Serial.println("clearing!");
@@ -321,4 +334,54 @@ long NewMap(long val, long in_min, long in_max, long out_min, long out_max)
   unsigned long newpos = ((pos * nov) + niv - 1) / niv; // new position with rounding
   if (out_min < out_max) return out_min + newpos - 1;
   return out_min - newpos + 1;
+}
+
+void getGeolocation() {
+  String url = "http://ipinfo.io/json";  // API endpoint to get location info
+  HTTPClient http;
+
+  http.begin(url);  // Start HTTP request
+  int httpCode = http.GET();  // Make GET request
+
+  if (httpCode == HTTP_CODE_OK) {  // Check if the response is OK
+    String payload = http.getString();  // Get the response as a string
+    Serial.println(payload);  // Print the full response for debugging
+
+    // Parse the JSON response
+    DynamicJsonDocument doc(1024);
+    deserializeJson(doc, payload);
+
+    // Extract latitude and longitude
+    String loc = doc["loc"].as<String>();
+    int commaIndex = loc.indexOf(',');
+    latitude = loc.substring(0, commaIndex);  // Get latitude
+    longitude = loc.substring(commaIndex + 1);  // Get longitude
+
+    int tzIndex = payload.indexOf("\"timezone\": \"");
+    if (tzIndex != -1) {
+      int tzStart = tzIndex + 13; // Length of '"timezone": "'
+      int tzEnd = payload.indexOf("\"", tzStart);
+      timezone = payload.substring(tzStart, tzEnd);
+    } else {
+      Serial.println("Timezone not found in response");
+    }
+    convertedTimeZone = getTzByLocation(timezone);
+
+    // Print latitude and longitude
+    Serial.print("Latitude: ");
+    Serial.println(latitude);
+    Serial.print("Longitude: ");
+    Serial.println(longitude);
+    Serial.print("Longitude: ");
+    Serial.println(longitude);
+    Serial.print("Timezone: ");
+    Serial.println(timezone);
+    Serial.print("new Timezone: ");
+    Serial.println(convertedTimeZone);
+
+  } else {
+    Serial.println("Error on HTTP request");
+  }
+
+  http.end();  // End HTTP request
 }
