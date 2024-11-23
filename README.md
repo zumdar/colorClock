@@ -45,6 +45,12 @@ contact me!
 
 Patrick Morales with the color / time idea many years ago at House Electric in Athens, GA.
 
+Peter Chu helped with automatic time zone detection.
+
+## Notes
+Login: admin
+Password: colorclock
+
 ## TODO:
  - make ESP an access point so you can enter wifi info that way instead of having to upload code again
   - if there is no wifi, set the time manually from your device via the access point. (can we grab the device's time and just use that?) 
